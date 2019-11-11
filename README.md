@@ -1,9 +1,13 @@
 # steam-categories
 Super basic Node.js library to help with modifying the new Steam categories
 
+```
+npm i steam-categories
+```
+
 Usage:
 ```js
-const SteamCat = require('./index');
+const SteamCat = require('steam-categories');
 const path = require('path');
 
 // %LOCALAPPDATA%/Steam/htmlcache/Local Storage/leveldb
