@@ -1,0 +1,29 @@
+{
+  "name": "steam-categories",
+  "version": "1.0.0",
+  "description": "Library to work with Steam categories",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doZennn/steam-categories.git"
+  },
+  "keywords": [
+    "steam",
+    "steam-categories"
+  ],
+  "author": "Jozen Martinez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/doZennn/steam-categories/issues"
+  },
+  "homepage": "https://github.com/doZennn/steam-categories#readme",
+  "dependencies": {
+    "level": "^6.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.1.0"
+  }
+}
