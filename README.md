@@ -21,6 +21,20 @@ cats.read().then((collections) => {
   // Add DOOM to existing "test" collection
   collections[1]['user-collections.test'].value.added.push(379720);
 
+  // Get collection "test"
+  console.info(cats.get('test'));
+  ```json
+  {
+    key: 'user-collections.test',
+    timestamp: 1573477978,
+    value: {
+      id: 'test',
+      name: 'Test Collection',
+      added: [ 379720 ]
+    }
+  }
+  ```
+
   // Create a new collection with Counter-Strike, DOOM, and Half-Life 2
   cats.add('someUniqueKey', {
     name: 'Super Cool Collection',

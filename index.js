@@ -56,14 +56,21 @@ module.exports = class SteamCategories {
     return false;
   }
 
+  get(id) {
+    id = `user-collections.${id}`;
+    for (const [, x] of Object.entries(this.collections)) {
+      if (x[id]) {
+        return x[id];
+      }
+    }
+    return false;
+  }
+
   add(id, values) {
     const data = {
       key: `user-collections.${id}`,
       timestamp: Math.ceil(Date.now()/1000),
-      value: {
-        id: `${id}`,
-        ...values
-      },
+      value: Object.assign({}, { id: `${id}` }, values),
       conflictResolutionMethod: 'custom',
       strMethodId: 'union-collections'
     };
