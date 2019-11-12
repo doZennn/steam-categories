@@ -23,7 +23,7 @@ cats.read().then((collections) => {
 
   // Get collection "test"
   console.info(cats.get('test'));
-  ```json
+  /*
   {
     key: 'user-collections.test',
     timestamp: 1573477978,
@@ -33,7 +33,7 @@ cats.read().then((collections) => {
       added: [ 379720 ]
     }
   }
-  ```
+  */
 
   // Create a new collection with Counter-Strike, DOOM, and Half-Life 2
   cats.add('someUniqueKey', {
