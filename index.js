@@ -56,6 +56,19 @@ module.exports = class SteamCategories {
     return false;
   }
 
+  // Expose some leveldb methods
+  close() {
+    return this.db.close();
+  }
+
+  isClosed() {
+    return this.db.isClosed();
+  }
+
+  isOpen() {
+    return this.db.isOpen();
+  }
+
   get(id) {
     id = `user-collections.${id}`;
     for (const [, x] of Object.entries(this.collections)) {

@@ -5,6 +5,11 @@ Super basic Node.js library to help with modifying the new Steam categories
 npm i steam-categories
 ```
 
+Notes:
+ - Launching Steam while the database is still in use will cause Steam to delete it. So use `close()` when you're done.
+ - `read()` will throw an exception if you try to access the database whilst Steam is open.  
+ Make sure to catch it or use `isClosed()` / `isOpen()`
+
 Usage:
 ```js
 const SteamCat = require('steam-categories');
@@ -18,11 +23,9 @@ const cats = new SteamCat(levelDBPath, '88089999');
 
 // Read user collections
 cats.read().then((collections) => {
-  // Add DOOM to existing "test" collection
-  collections[1]['user-collections.test'].value.added.push(379720);
-
   // Get collection "test"
-  console.info(cats.get('test'));
+  const testCollection = cats.get('test');
+  console.info(testCollection);
   /*
   {
     key: 'user-collections.test',
@@ -30,10 +33,16 @@ cats.read().then((collections) => {
     value: {
       id: 'test',
       name: 'Test Collection',
-      added: [ 379720 ]
+      added: []
     }
   }
   */
+
+  // Add DOOM to "test" collection
+  testCollection.value.added.push(379720);
+
+  // Change the name
+  testCollection.value.name = '👀';
 
   // Create a new collection with Counter-Strike, DOOM, and Half-Life 2
   cats.add('someUniqueKey', {
@@ -44,6 +53,10 @@ cats.read().then((collections) => {
   // Save collections
   cats.save().then(() => {
     console.info('yay!');
+    // Close the database when you're done
+    cats.close().then(() => {
+      console.info('Database closed, safe to open Steam again.');
+    });
   });
 });
 ```
