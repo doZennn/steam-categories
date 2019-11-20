@@ -58,5 +58,8 @@ cats.read().then((collections) => {
       console.info('Database closed, safe to open Steam again.');
     });
   });
+}).catch((err) => {
+  // Error reading database (most likely locked)
+  console.error(err.message);
 });
 ```

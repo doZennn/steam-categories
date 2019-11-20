@@ -1,8 +1,9 @@
 const level = require('level');
 
 module.exports = class SteamCategories {
-  constructor(db, steamid) {
-    this.db = level(db);
+  constructor(dbPath, steamid) {
+    this.db = null;
+    this.dbPath = dbPath;
     this.steam3Id = steamid;
     this.namespaceKeys = [];
     this.collections = {};
@@ -11,7 +12,11 @@ module.exports = class SteamCategories {
   }
 
   async read() {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
+      this.db = level(this.dbPath, { createIfMissing: false }, (err) => {
+        if (err) return reject(err);
+      });
+
       this.db.get(`${this.keyPrefix}s`, (err, value) => {
         if (err) throw err;
         this.namespaceKeys = JSON.parse(value.slice(1)).map((x) => `${this.keyPrefix}-${x[0]}`);
