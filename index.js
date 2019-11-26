@@ -18,7 +18,7 @@ module.exports = class SteamCategories {
       });
 
       this.db.get(`${this.keyPrefix}s`, (err, value) => {
-        if (err) throw err;
+        if (err) return reject(err);
         this.namespaceKeys = JSON.parse(value.slice(1)).map((x) => `${this.keyPrefix}-${x[0]}`);
 
         const collections = {};
