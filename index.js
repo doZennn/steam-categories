@@ -1,7 +1,7 @@
 var levelup = require('levelup');
 var leveldown = require('leveldown');
 var encode = require('encoding-down');
-var Iconv = require("iconv").Iconv;
+var iconv = require('iconv-lite');
 
 module.exports = class SteamCategories {
   constructor(dbPath, steamid) {
@@ -124,14 +124,12 @@ module.exports = class SteamCategories {
       }
       output.push(collection);
     });
-    let iconv = new Iconv("UTF-8","UTF-16LE");
-    return `00${iconv.convert(JSON.stringify(output)).toString('hex')}`;
+    return `00${iconv.encode(JSON.stringify(output),'utf16le').toString('hex')}`;
   }
 
   unserializeCollections(input) {
     let iBuf = Buffer.from(input.slice(2),'hex');
-    let iconv2 = new Iconv("UTF-16LE","UTF-8");
-    let decoded = iconv2.convert(iBuf).toString();
+    let decoded = iconv.decode(iBuf,'utf16le');
     const collections = JSON.parse(decoded)
     const output = {};
     collections.forEach((x) => {
