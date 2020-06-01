@@ -21,7 +21,10 @@
   },
   "homepage": "https://github.com/doZennn/steam-categories#readme",
   "dependencies": {
-    "level": "^6.0.0"
+    "encoding-down": "^6.3.0",
+    "iconv": "^3.0.0",
+    "leveldown": "^5.6.0",
+    "levelup": "^4.4.0"
   },
   "devDependencies": {
     "eslint": "^6.1.0"

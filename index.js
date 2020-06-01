@@ -1,4 +1,7 @@
-const level = require('level');
+var levelup = require('levelup');
+var leveldown = require('leveldown');
+var encode = require('encoding-down');
+var Iconv = require("iconv").Iconv;
 
 module.exports = class SteamCategories {
   constructor(dbPath, steamid) {
@@ -13,14 +16,13 @@ module.exports = class SteamCategories {
 
   async read() {
     return new Promise((resolve, reject) => {
-      this.db = level(this.dbPath, { createIfMissing: false }, (err) => {
-        if (err) return reject(err);
+      this.db = levelup(encode(leveldown(this.dbPath), { valueEncoding: 'hex' }),(err)=>{
+        if (err) return reject(err)
       });
 
-      this.db.get(`${this.keyPrefix}s`, (err, value) => {
+      this.db.get(`${this.keyPrefix}s`, {valueEncoding: 'utf-8'}, (err, value) => {
         if (err) return reject(err);
         this.namespaceKeys = JSON.parse(value.slice(1)).map((x) => `${this.keyPrefix}-${x[0]}`);
-
         const collections = {};
         this.db.createReadStream({
           keys: true,
@@ -122,11 +124,15 @@ module.exports = class SteamCategories {
       }
       output.push(collection);
     });
-    return `${String.fromCharCode(1)}${JSON.stringify(output)}`;
+    let iconv = new Iconv("UTF-8","UTF-16LE");
+    return `00${iconv.convert(JSON.stringify(output)).toString('hex')}`;
   }
 
   unserializeCollections(input) {
-    const collections = JSON.parse(input.slice(1));
+    let iBuf = Buffer.from(input.slice(2),'hex');
+    let iconv2 = new Iconv("UTF-16LE","UTF-8");
+    let decoded = iconv2.convert(iBuf).toString();
+    const collections = JSON.parse(decoded)
     const output = {};
     collections.forEach((x) => {
       if (x[1].value) {
