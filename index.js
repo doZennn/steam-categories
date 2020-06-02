@@ -31,9 +31,17 @@ module.exports = class SteamCategories {
           lte: `${this.keyPrefix}-~`
         }).on('data', (data) => {
           if (this.namespaceKeys.includes(data.key)) {
+
             const id = data.key.replace(`${this.keyPrefix}-`, '');
-            const unserialized = this.unserializeCollections(data.value);
-            collections[id] = unserialized;
+            if(['00','01'].indexOf(data.value.substr(0,2))<0){
+              reject('Illegal BOM')
+            }
+            try {
+              const unserialized = this.unserializeCollections(data.value);
+              collections[id] = unserialized;
+            } catch(err) {
+              reject(err)
+            }
           }
         }).on('end', () => {
           this.collections = collections;
@@ -128,9 +136,10 @@ module.exports = class SteamCategories {
   }
 
   unserializeCollections(input) {
-    let iBuf = Buffer.from(input.slice(2),'hex');
+    let transformed = input.substr(0,2)==='01'?input.slice(2).match(/.{1,2}/g).join('00').concat('00'): input.slice(2);
+    let iBuf = Buffer.from(transformed,'hex');
     let decoded = iconv.decode(iBuf,'utf16le');
-    const collections = JSON.parse(decoded)
+    const collections = JSON.parse(decoded);
     const output = {};
     collections.forEach((x) => {
       if (x[1].value) {
